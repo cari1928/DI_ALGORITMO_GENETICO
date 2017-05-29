@@ -1,0 +1,34 @@
+Skip to content
+ 
+Search…
+All gists
+GitHub
+New gist
+@cari1928
+  Star 0
+  Fork 0
+  @IsmiKinIsmiKin/.gitignore
+Created 4 years ago
+Embed  
+<script src="https://gist.github.com/IsmiKin/5731333.js"></script>
+  Download ZIP
+ Code  Revisions 1
+Archivo de para ignorar archivos y directorios en git en un proyecto J2EE con NetBeans
+Raw
+ .gitignore
+/NombreProyecto/NombreProyecto-ejb/build/
+/NombreProyecto/NombreProyecto-ejb/dist/
+/NombreProyecto/NombreProyecto-war/build/
+/NombreProyecto/NombreProyecto-war/dist/
+/NombreProyecto/NombreProyecto-ejb/src/conf/persistence.xml
+/NombreProyecto/build/
+/NombreProyecto/nbproject/
+/NombreProyecto/nbproject/private/
+/NombreProyecto/build/
+/NombreProyecto/dist/
+/NombreProyecto/setup/
+/NombreProyecto/build.xml
+
+*.jar
+*.war
+*.ear
