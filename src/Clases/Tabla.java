@@ -19,7 +19,6 @@ public class Tabla extends javax.swing.JFrame {
         jtbl_table.setModel(modelo);
         lblExtras.setText("Umbral: " + extras[0] + "; Alpha: " + extras[1]);
 
-        btnEjecucion.setVisible(true);
         setTitle("Resultados");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -47,7 +46,6 @@ public class Tabla extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jtbl_table = new javax.swing.JTable();
-        btnEjecucion = new javax.swing.JButton();
         lblExtras = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -65,13 +63,6 @@ public class Tabla extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jtbl_table);
 
-        btnEjecucion.setText("Ejecución");
-        btnEjecucion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEjecucionActionPerformed(evt);
-            }
-        });
-
         lblExtras.setText("lblExtras");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -84,8 +75,7 @@ public class Tabla extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(lblExtras)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnEjecucion)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -94,21 +84,14 @@ public class Tabla extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEjecucion)
-                    .addComponent(lblExtras))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lblExtras)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEjecucionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEjecucionActionPerformed
-        Ejecucion obje = new Ejecucion(datos);
-    }//GEN-LAST:event_btnEjecucionActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEjecucion;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jtbl_table;
     private javax.swing.JLabel lblExtras;

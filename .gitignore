@@ -1,6 +1,6 @@
 Skip to content
  
-Search…
+Searchï¿½
 All gists
 GitHub
 New gist
@@ -32,3 +32,5 @@ Raw
 *.jar
 *.war
 *.ear
+/build/
+/dist/
