@@ -26,4 +26,21 @@ public class Extras {
         return random.nextDouble();
     }
 
+    public static Integer[] convertToBinaryIntegerArray(int num, int numBits) {
+        String binary = Integer.toBinaryString(num);
+        Integer[] tmp = new Integer[numBits]; //crea el arreglo que almacenará a este número
+        char[] p = binary.toCharArray();
+        int punto = tmp.length - p.length, cont = 0;
+
+        for (int i = 0; i < tmp.length; i++) {
+            if (i >= punto) {
+                tmp[i] = Integer.parseInt(String.valueOf(p[cont]));
+                ++cont;
+            } else {
+                tmp[i] = 0;
+            }
+        }
+        return tmp;
+    }
+
 }

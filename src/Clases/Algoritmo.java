@@ -1,5 +1,6 @@
 package Clases;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -12,28 +13,57 @@ public class Algoritmo {
 
     //datos calculados por el programa
     private int numBits;
-
     //población actual y temporal de cromosomas
-    private List<Integer[]> lCromosomas, lCromoTmp; //lista de cromosomas
+    private List<Integer[]> lCromoBin; //lista de cromosomas binarios
+    private List<Integer> lCromoInt; //lista de cromosomas enteros, por si se necesita
+    private List<Integer[]> lCromoTmp;  //poblacion temporal de cromosomas
+    private int[] fitness; //fórmula a evaluar
 
-    public Algoritmo(int limInf, int limSup, double probMutación, int numCromosomas) {
+    public Algoritmo(int limInf, int limSup, double probMutación, int numCromosomas, int[] fitness) {
         this.limInf = limInf;
         this.limSup = limSup;
         this.probMutación = probMutación;
         this.numCromosomas = numCromosomas;
+        this.fitness = fitness;
 
         init();
     }
 
     public void init() {
         setNumBits(); //asigna el número de bits para cada cromosoma
+        cromFamily(); //Genera la población actual de cromosomas
+
     }
 
+    /**
+     * Calcula el número de bits para cada cromosoma
+     */
     private void setNumBits() {
         int numCombinaciones = limSup - limInf + 1;
         numBits = (int) Math.exp(Math.log(numCombinaciones / 2));
     }
 
+    /**
+     * Genera la población actual de cromosomas
+     */
+    private void cromFamily() {
+        List<Integer> tmp = new ArrayList<>();
+        Random rnd = new Random();
+        int num;
+        for (int i = 0; i < numCromosomas; i++) {
+            num = limInf + rnd.nextInt(limSup);
+
+            if (!tmp.contains(num)) {
+                tmp.add(num);
+                lCromoBin.add(Extras.convertToBinaryIntegerArray(num, numBits)); //guarda el cromo binario
+                lCromoInt.add(num); //guarda cromo entero, por si se necesita
+            }
+        }
+    }
+
+    /**
+     * ???
+     */
     private int[] generaCromosomaRandom(int noCromo, int rangoI, int rangoF) {
         int cromosomas[] = new int[noCromo];
         Random rnd = new Random();
@@ -43,6 +73,9 @@ public class Algoritmo {
         return cromosomas;
     }
 
+    /**
+     * ???
+     */
     private String[] convertirBinarios(int cromosomas[]) {
         String[] binarios = new String[cromosomas.length];
         for (int i = 0; i < binarios.length; i++) {
@@ -117,6 +150,10 @@ public class Algoritmo {
                 }
             }
         }
+    }
+
+    public static void main(String[] args) {
+        Algoritmo objA = new Algoritmo(0, 100, 0.3, 6, new int[]{2, 3, 0}); //equivale a la formula 2x^2+3x+0
     }
 
 }

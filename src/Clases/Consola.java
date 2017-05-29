@@ -21,13 +21,13 @@ public class Consola {
         System.out.print("Ingrese el límite superior: ");
         limSup = reader.nextInt();
 
-        System.out.print("Número de Cromosomas a utilizar: ");
+        System.out.print("Número de Individuos a utilizar: ");
         numCromosomas = reader.nextInt();
 
         System.out.print("Probabilidad para mutación: ");
         probMuta = reader.nextDouble();
 
-        objA = new Algoritmo(limInf, limSup, probMuta, numCromosomas);
+        //objA = new Algoritmo(limInf, limSup, probMuta, numCromosomas);
     }
 
 }
