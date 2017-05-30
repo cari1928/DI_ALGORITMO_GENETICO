@@ -42,5 +42,9 @@ public class Extras {
         }
         return tmp;
     }
+    
+    public static int binToDec(String numeroBinario){
+      return Integer.parseInt(numeroBinario,2);
+   }
 
 }
