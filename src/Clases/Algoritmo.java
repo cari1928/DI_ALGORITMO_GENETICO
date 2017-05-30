@@ -1,6 +1,7 @@
 package Clases;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -20,8 +21,15 @@ public class Algoritmo {
     private List<Integer[]> lCromoTmp;  //poblacion temporal de cromosomas
     private List<Double> lFitness;
     private List<Double> lRatio;
+    private List<Integer[]> lCrossover;
+    private List<Integer[]> lMutation;
+    private List<String> lResultados;
+    private List<String> lEpoch;
+    private List<String> lLabels;
     private int[] fitness; //fórmula a evaluar
     private int epoch;
+    private int countX;
+    private Tools objT;
 
     public Algoritmo(int limInf, int limSup, double probMutación, int numCromosomas, int numExecutions, int[] fitness) {
         this.limInf = limInf;
@@ -31,15 +39,27 @@ public class Algoritmo {
         this.numExecutions = numExecutions;
         this.fitness = fitness;
 
+        objT = new Tools();
+
         lCromoBin = new ArrayList<>();
         lCromoInt = new ArrayList<>();
+        lResultados = new ArrayList<>();
+        iniLists();
+
+        epoch = 1;
+        countX = 1;
+
+        init();
+    }
+
+    private void iniLists() {
+        lEpoch = new ArrayList<>();
+        lLabels = new ArrayList<>();
         lCromoTmp = new ArrayList<>();
         lFitness = new ArrayList<>();
         lRatio = new ArrayList<>();
-
-        epoch = 0;
-
-        init();
+        lCrossover = new ArrayList<>();
+        lMutation = new ArrayList<>();
     }
 
     public void init() {
@@ -51,8 +71,15 @@ public class Algoritmo {
     private void execution() {
         Integer[][] tmpCromosomas;
 
+        for (int i = 0; i < numCromosomas; i++) {
+            lEpoch.add(String.valueOf(epoch));
+            lLabels.add("X" + (i + 1));
+        }
+
         evaluarFitness(fitness[0], fitness[1], fitness[2]);
+        mostrar("DESPUES DE FITNES");
         getRatio();
+        mostrar("DESPUES DE RATIO");
 
         //para calcular crossover
         for (int i = 0; i < lCromoBin.size(); i++) {
@@ -66,18 +93,46 @@ public class Algoritmo {
                 break;
             }
         }
+        mostrar("DESPUES DE CROSS");
+        
+        objT.addCromoBin(lCromoBin);
+        updateCromoInteger();
+        
         //pra calcular mutation
         for (int i = 0; i < lCromoBin.size(); i++) {
-            mutation(lCromoTmp.get(i));
+            Integer[] tmp = lCromoTmp.get(i);
+            mutation(tmp);
         }
-        lCromoBin = lCromoTmp;
-        updateCromoInteger();
-        lCromoTmp = new ArrayList<>();
+        mostrar("DESPUES DE MUTA");
+
+        objT.addEpoch(lEpoch);
+        objT.addLabel(lLabels);
+        objT.addCromoInt(lCromoInt);
+        objT.addFitnes(lFitness);
+        objT.addRatio(lRatio);
+        objT.addCrossover(lCrossover);
+        objT.addMutation(lMutation);
+
+        mostrar("DESPUES DE AÑADIR A TOOLS");
+
+        lCromoBin = Tools.pasaList(lCromoTmp);
+
+        mostrar("DESPUES DE INTERCAMBIAR DATOS CON LCROMOTMP");
+        iniLists();
 
         ++epoch;
 
-        if (epoch < numExecutions) {
+        if (epoch <= numExecutions) {
             execution();
+        } else if (epoch > numExecutions) {
+            System.out.println(""); //para debuguear
+        }
+    }
+
+    private void mostrar(String msg) {
+        System.out.println(msg);
+        for (int i = 0; i < lCromoBin.size(); i++) {
+            System.out.println(Arrays.toString(lCromoBin.get(i)));
         }
     }
 
@@ -85,7 +140,7 @@ public class Algoritmo {
         lCromoInt = new ArrayList<>();
         int value;
         for (int i = 0; i < lCromoBin.size(); i++) {
-            value = Extras.binToDec(getNumber(lCromoBin.get(i)));
+            value = Tools.binToDec(getNumber(lCromoBin.get(i)));
             lCromoInt.add(value);
         }
     }
@@ -98,6 +153,8 @@ public class Algoritmo {
             }
         }
         System.out.println("RESULTADO: " + max);
+        objT.finalArray();
+
     }
 
     private String getNumber(Integer[] tmp) {
@@ -129,7 +186,7 @@ public class Algoritmo {
 
             if (!tmp.contains(num) && num < limSup) {
                 tmp.add(num);
-                tmpI = Extras.convertToBinaryIntegerArray(num, numBits); //dejado así por cuestiones de pruebas y entendimiento
+                tmpI = Tools.convertToBinaryIntegerArray(num, numBits); //dejado así por cuestiones de pruebas y entendimiento
                 lCromoBin.add(tmpI); //guarda el cromo binario
                 lCromoInt.add(num); //guarda cromo entero, por si se necesita
             } else {
@@ -158,11 +215,11 @@ public class Algoritmo {
     }
 
     private void crossover(Integer[] madre, Integer[] padre) {
-        double rand = Extras.getRandom(); //final
+        double rand = Tools.getRandom(); //final
 
         //double rand = 0.85;//pruebas
         double probabilidad = ((double) (1) / (madre.length - 1));
-        double[] rango = Extras.generaRango(madre.length - 1, probabilidad);
+        double[] rango = Tools.generaRango(madre.length - 1, probabilidad);
         int tmp;
 
         for (int i = 0; i < rango.length; i++) {
@@ -176,6 +233,9 @@ public class Algoritmo {
                 //guarda la nueva población
                 lCromoTmp.add(madre);
                 lCromoTmp.add(padre);
+
+                lCrossover.add(madre);
+                lCrossover.add(padre);
                 return;
             }
         }
@@ -184,7 +244,7 @@ public class Algoritmo {
     private void mutation(Integer[] cromosoma) {
         double numRandom;
         for (int i = 0; i < cromosoma.length; i++) {
-            numRandom = Extras.getRandom();
+            numRandom = Tools.getRandom();
 
             if (numRandom > probMutación) {
                 if (cromosoma[i] == 0) {
@@ -194,10 +254,11 @@ public class Algoritmo {
                 }
             }
         }
+        lMutation.add(cromosoma);
     }
 
     private Integer[][] rouletteSelection() {
-        double random = Extras.getRandom();
+        double random = Tools.getRandom();
         double[] rangos = generateChart();
         Integer[][] tmpCromosomas = new Integer[2][numBits];
         int countCromo = 0;
@@ -213,7 +274,7 @@ public class Algoritmo {
                 //ya tiene dos cromosomas
                 return tmpCromosomas;
             } else if (countCromo == 1 && flag) {
-                random = Extras.getRandom();
+                random = Tools.getRandom();
                 i = -1; // para que vuelva a checar todo
                 flag = false;
             }
@@ -233,7 +294,7 @@ public class Algoritmo {
 
     public static void main(String[] args) {
         //int limInf, int limSup, double probMutación, int numCromosomas, int numExecutions, int[] fitness
-        Algoritmo objA = new Algoritmo(0, 15, 0.5, 4, 2, new int[]{2, 3, 0}); //equivale a la formula 2x^2+3x+0
+        Algoritmo objA = new Algoritmo(0, 100, 0.6, 6, 4, new int[]{2, 3, 0}); //equivale a la formula 2x^2+3x+0
         objA.finalResult();
     }
 

@@ -8,16 +8,15 @@ public class Tabla extends javax.swing.JFrame {
     DefaultTableModel modelo;
     double[] data;
     String[][] info;
-    List<Double[]> datos;
+    List<String[]> datos;
 
-    public Tabla(String[] enca, List<Double[]> datos, String[] extras) {
+    public Tabla(String[] enca, List<String[]> datos) {
         initComponents();
         this.datos = datos;
 
         info = listToArray();
         modelo = new DefaultTableModel(info, enca);
         jtbl_table.setModel(modelo);
-        lblExtras.setText("Umbral: " + extras[0] + "; Alpha: " + extras[1]);
 
         setTitle("Resultados");
         setLocationRelativeTo(null);
@@ -28,12 +27,12 @@ public class Tabla extends javax.swing.JFrame {
 
     private String[][] listToArray() {
         String[][] tmp = new String[datos.size()][datos.get(0).length];
-        Double[] dato;
+        String[] dato;
         for (int i = 0; i < datos.size(); i++) {
             dato = datos.get(i);
 
             for (int j = 0; j < dato.length; j++) {
-                tmp[i][j] = String.valueOf(dato[j]);
+                tmp[i][j] = dato[j];
             }
         }
 
